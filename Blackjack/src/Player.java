@@ -1,40 +1,35 @@
-import java.util.ArrayList;
-import java.util.List;
 
 public class Player {
-	private int sum;
-	private int aces;
-	private List<Card> hand;
 	String name;
-	public Player(String name) {
+	Deck hand;
+	int hide;
+	public Player (String name) {
 		this.name = name;
-		hand = new ArrayList<Card>();
-	}
-	public Player() {
-		this("Player");
-	}
-	public void addCard(Card card) {
-		hand.add(card);
-		sum += card.getValue();
-		char c = card.getCard().charAt(0);
-		if (c == 'A') {
-			aces ++;
-		}
-		while(sum > 21 && aces > 0) {
-			sum -= 10;
-			aces --;
-		}
-	}
-
-	public int getSum() {
-		return sum;
+		hand = new Deck(21);
+		hide = -1;
 	}
 	
-	public String getName() {
-		return name;
+	public void hide(int hide) {
+		this.hide = hide;
 	}
 
+	
 	public String toString() {
-		return "<"+name+">"+hand+"("+sum+")";
+		String str = name + " [";
+		for(int i = 0; i< hand.last; i++) {
+			if (i == hide)
+				str += "?";
+			else
+				str = str + hand.cards[i];
+			if (i < hand.last-1)
+				str += " ";
+		}	
+		str += "] ";
+		int sum = hand.sum();
+		if (hide != -1 && hide < hand.last)
+			sum -= hand.cards[hide].value;
+		String sumStr = sum == 0 ? "" : ""+sum;
+		str += "[" + sumStr + "]";
+		return str;
 	}
 }
